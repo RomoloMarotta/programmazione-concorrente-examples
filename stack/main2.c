@@ -45,17 +45,15 @@ void* thread_function(void* args) {
         //usleep(1);
         long rand_value;
         long rand_num;
-        unsigned long long start = RAW_CLOCK_READ();
         lrand48_r(&rand_state, &rand_value);
-        lrand48_r(&rand_state, &rand_num);
-        __sync_fetch_and_add(&num_ops, 1);
-        while((RAW_CLOCK_READ() - start) < CLOCKS_PER_US);
         if (rand_value % 2 == 0) {
             int value = rand_num % 100;
+            lrand48_r(&rand_state, &rand_num);
             push(&stack, value);
         } else {
             pop(&stack);
         }
+        __sync_fetch_and_add(&num_ops, 1);
     }
     return NULL;
 }
